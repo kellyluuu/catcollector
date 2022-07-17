@@ -32,6 +32,7 @@ def about(request):
     return render(request,'about.html')
 
 # Add new view
+@login_required
 def cats_index(request):
   ## cats = Cat.objects.all()
   cats = Cat.objects.filter(user=request.user)
@@ -51,6 +52,7 @@ def add_feeding(request, cat_id):
     new_feeding.save()
   return redirect('detail', cat_id=cat_id)
 
+@login_required
 def cats_detail(request, cat_id):
   ## Get the the individual cat
   cat = Cat.objects.get(id=cat_id)
@@ -60,11 +62,13 @@ def cats_detail(request, cat_id):
   ## render template, pass it the cat
   return render(request, 'cats/detail.html', { 'cat': cat, 'feeding_form': feeding_form, 'toys': toys_cat_doesnt_have })
 
+@login_required
 def assoc_toy(request, cat_id, toy_id):
   # Note that you can pass a toy's id instead of the whole object
   Cat.objects.get(id=cat_id).toys.add(toy_id)
   return redirect ('detail', cat_id=cat_id)
 
+@login_required
 def add_photo(request, cat_id):
     # photo-file will be the "name" attribute on the <input type="file">
     photo_file = request.FILES.get('photo-file', None)
